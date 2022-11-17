@@ -2,7 +2,8 @@ FROM alpine
 
 MAINTAINER KissIce Chu <i@kissice.cc>
 
-ENV LEANOTE_VERSION=2.6.1
+ARG LEANOTE_VERSION
+ENV LEANOTE_VERSION_VAR=$LEANOTE_VERSION
 
 RUN set -exo pipefail; \
     apk update; \
@@ -10,7 +11,7 @@ RUN set -exo pipefail; \
         curl \
         mongodb-tools \
     ; \
-    curl -L http://sourceforge.net/projects/leanote-bin/files/${LEANOTE_VERSION}/leanote-linux-amd64-v${LEANOTE_VERSION}.bin.tar.gz/download >> \
+    curl -L http://sourceforge.net/projects/leanote-bin/files/${LEANOTE_VERSION_VAR}/leanote-linux-amd64-v${LEANOTE_VERSION_VAR}.bin.tar.gz/download >> \
     /usr/local/leanote-linux-amd64.bin.tar.gz; \
     curl -L https://raw.githubusercontent.com/zhuwenbing/docker-leanote/master/leanote_install_data.tar.gz >> \
     /usr/local/leanote_install_data.tar.gz; \
