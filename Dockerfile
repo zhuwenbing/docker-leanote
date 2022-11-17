@@ -1,6 +1,6 @@
 FROM alpine
 
-MAINTAINER KissIce Chu <i@kissice.cc>
+LABEL maintainer="Mr. Chu"
 
 ARG LEANOTE_VERSION=2.6.1
 ENV LEANOTE_VERSION_VAR=$LEANOTE_VERSION
