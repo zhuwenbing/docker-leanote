@@ -1,6 +1,8 @@
-FROM alpine
+FROM --platform=$TARGETPLATFORM alpine
 
 LABEL maintainer="Mr. Chu"
+
+ARG TARGETARCH
 
 ARG LEANOTE_VERSION=2.6.1
 ENV LEANOTE_VERSION_VAR=$LEANOTE_VERSION
@@ -11,16 +13,16 @@ RUN set -exo pipefail; \
         curl \
         mongodb-tools \
     ; \
-    curl -L http://sourceforge.net/projects/leanote-bin/files/${LEANOTE_VERSION_VAR}/leanote-linux-amd64-v${LEANOTE_VERSION_VAR}.bin.tar.gz/download >> \
-    /usr/local/leanote-linux-amd64.bin.tar.gz; \
+    curl -L http://sourceforge.net/projects/leanote-bin/files/${LEANOTE_VERSION_VAR}/leanote-linux-${TARGETARCH}-v${LEANOTE_VERSION_VAR}.bin.tar.gz/download >> \
+    /usr/local/leanote-linux-${TARGETARCH}.bin.tar.gz; \
     curl -L https://raw.githubusercontent.com/zhuwenbing/docker-leanote/master/leanote_install_data.tar.gz >> \
     /usr/local/leanote_install_data.tar.gz; \
     apk del --purge \
         curl \
     ; \
     rm -rf /var/cache/apk/*; \
-    tar -xzf /usr/local/leanote-linux-amd64.bin.tar.gz -C /; \
-    rm -f /usr/local/leanote-linux-amd64.bin.tar.gz; \
+    tar -xzf /usr/local/leanote-linux-${TARGETARCH}.bin.tar.gz -C /; \
+    rm -f /usr/local/leanote-linux-${TARGETARCH}.bin.tar.gz; \
     mkdir -p /leanote/data/public/upload; \
     mkdir -p /leanote/data/files; \
     mkdir -p /leanote/data/mongodb_backup; \
