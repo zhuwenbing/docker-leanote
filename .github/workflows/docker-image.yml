@@ -7,6 +7,10 @@ on:
         description: "version"
         required: true
         default: "2.6.1"
+        type: choice
+        options:
+        - "2.6.1"
+        - "2.5"
 
 jobs:
   build:
