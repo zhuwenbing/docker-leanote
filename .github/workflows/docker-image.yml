@@ -11,10 +11,27 @@ on:
         options:
         - "2.6.1"
         - "2.5"
+  schedule:
+    - cron:  "0 3 * * *"
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
+    outputs:
+      needs-updating: ${{ steps.check.outputs.needs-updating }}
+    steps:
+      - name: Check if update available
+        id: check
+        uses: lucacome/docker-image-update-checker@v1
+        with:
+          base-image: alpine:latest
+          image: ${{ secrets.DOCKER_USERNAME }}/leanote:${{ github.event.inputs.version }}
+          platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7
+
+  build:
+    needs: check
+    runs-on: ubuntu-latest
+    if: needs.check.outputs.needs-updating == "true"
 
     steps:
       - name: Checkout code
