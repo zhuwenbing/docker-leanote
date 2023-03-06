@@ -1,18 +1,9 @@
-name: Docker Leanote Image CI
+name: Leanote Docker Image CI
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: "version"
-        required: true
-        default: "2.6.1"
-        type: choice
-        options:
-          - "2.6.1"
-          - "2.5"
   schedule:
-    - cron: "0 3 * * *"
+    - cron: "0 5 * * *"
 
 jobs:
   check:
@@ -25,13 +16,17 @@ jobs:
         uses: lucacome/docker-image-update-checker@v1
         with:
           base-image: alpine:latest
-          image: ${{ secrets.DOCKER_USERNAME }}/leanote:${{ github.event.inputs.version }}
+          image: ${{ secrets.DOCKER_USERNAME }}/leanote:2.6.1
           platforms: linux/amd64
 
   build:
     needs: check
     runs-on: ubuntu-latest
     if: needs.check.outputs.needs-updating == 'true'
+
+    strategy:
+      matrix:
+        version: ["2.5", "2.6.1"]
 
     steps:
       - name: Checkout code
@@ -42,7 +37,7 @@ jobs:
         run: |
           REPOSITORY=${{ secrets.DOCKER_USERNAME }}
           IMAGE_NAME=leanote
-          VERSION=${{ github.event.inputs.version }}
+          VERSION=${{ matrix.version }}
           TAGS="${REPOSITORY}/${IMAGE_NAME}:${VERSION},${REPOSITORY}/${IMAGE_NAME}:latest"
           echo "build_args=LEANOTE_VERSION=${VERSION}" >> $GITHUB_OUTPUT
           echo "tags=${TAGS}" >> $GITHUB_OUTPUT
