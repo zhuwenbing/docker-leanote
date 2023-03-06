@@ -12,17 +12,30 @@ jobs:
       needs-updating: ${{ steps.check.outputs.needs-updating }}
     steps:
       - name: Check if update available
-        id: check
+        id: run
         uses: lucacome/docker-image-update-checker@v1
         with:
           base-image: alpine:latest
           image: ${{ secrets.DOCKER_USERNAME }}/leanote:2.6.1
           platforms: linux/amd64
+        continue-on-error: true
+        if: github.event_name == 'schedule'
+      - name: Check on result
+        id: check
+        run: |
+          if [[ ${{ steps.run.outcome }} == 'success' ]]; then
+            echo "needs-updating=${{ steps.run.outputs.needs-updating }}" >> $GITHUB_OUTPUT
+          else
+            echo "needs-updating=true" >> $GITHUB_OUTPUT
+          fi
+        if: github.event_name == 'schedule'
 
   build:
     needs: check
     runs-on: ubuntu-latest
-    if: needs.check.outputs.needs-updating == 'true'
+    if: |
+      github.event_name != 'schedule' ||
+      needs.check.outputs.needs-updating == 'true'
 
     strategy:
       matrix:
