@@ -29,6 +29,8 @@ jobs:
             echo "needs-updating=true" >> $GITHUB_OUTPUT
           fi
         if: github.event_name == 'schedule'
+      - name: Keepalive Workflow
+        uses: gautamkrishnar/keepalive-workflow@v1
 
   build:
     needs: check
