@@ -51,7 +51,11 @@ jobs:
           REPOSITORY=${{ secrets.DOCKER_USERNAME }}
           IMAGE_NAME=leanote
           VERSION=${{ matrix.version }}
-          TAGS="${REPOSITORY}/${IMAGE_NAME}:${VERSION},${REPOSITORY}/${IMAGE_NAME}:latest"
+          if [[ ${{ matrix.version }} == '2.6.1' ]]; then
+            TAGS="${REPOSITORY}/${IMAGE_NAME}:${VERSION},${REPOSITORY}/${IMAGE_NAME}:latest"
+          else
+            TAGS="${REPOSITORY}/${IMAGE_NAME}:${VERSION}"
+          fi
           echo "build_args=LEANOTE_VERSION=${VERSION}" >> $GITHUB_OUTPUT
           echo "tags=${TAGS}" >> $GITHUB_OUTPUT
 
