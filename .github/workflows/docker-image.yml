@@ -17,7 +17,6 @@ jobs:
         with:
           base-image: alpine:latest
           image: ${{ secrets.DOCKER_USERNAME }}/leanote:2.6.1
-          platforms: linux/amd64
         continue-on-error: true
         if: github.event_name == 'schedule'
       - name: Check on result
