@@ -15,7 +15,7 @@ jobs:
         id: run
         uses: lucacome/docker-image-update-checker@v1.2.1
         with:
-          base-image: alpine:latest
+          base-image: library/alpine:latest
           image: ${{ secrets.DOCKER_USERNAME }}/leanote:2.6.1
         continue-on-error: true
         if: github.event_name == 'schedule'
