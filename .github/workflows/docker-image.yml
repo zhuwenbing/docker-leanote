@@ -16,7 +16,7 @@ jobs:
         uses: lucacome/docker-image-update-checker@v1.2.1
         with:
           base-image: library/alpine:latest
-          image: ${{ secrets.DOCKER_USERNAME }}/leanote:2.6.1-alpine
+          image: ${{ secrets.DOCKER_USERNAME }}/leanote:alpine
         continue-on-error: true
         if: github.event_name == 'schedule'
       - name: Check on result
@@ -51,7 +51,7 @@ jobs:
           IMAGE_NAME=leanote
           VERSION=${{ matrix.version }}
           if [[ ${{ matrix.version }} == '2.6.1' ]]; then
-            TAGS="${REPOSITORY}/${IMAGE_NAME}:${VERSION}-alpine,${REPOSITORY}/${IMAGE_NAME}:latest-alpine"
+            TAGS="${REPOSITORY}/${IMAGE_NAME}:${VERSION}-alpine,${REPOSITORY}/${IMAGE_NAME}:alpine,${REPOSITORY}/${IMAGE_NAME}:latest"
           else
             TAGS="${REPOSITORY}/${IMAGE_NAME}:${VERSION}-alpine"
           fi
