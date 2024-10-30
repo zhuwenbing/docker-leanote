@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Check if update available
         id: run
-        uses: lucacome/docker-image-update-checker@v1.2.1
+        uses: lucacome/docker-image-update-checker@v2.0.0
         with:
           base-image: library/alpine:latest
           image: ${{ secrets.DOCKER_USERNAME }}/leanote:alpine
