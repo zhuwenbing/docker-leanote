@@ -5,6 +5,11 @@ on:
   schedule:
     - cron: "0 5 * * *"
 
+env:
+  BASE_IMAGE: alpine
+  DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}
+  IMAGE_NAME: leanote
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -15,8 +20,8 @@ jobs:
         id: run
         uses: lucacome/docker-image-update-checker@v2.0.0
         with:
-          base-image: library/alpine:latest
-          image: ${{ secrets.DOCKER_USERNAME }}/leanote:alpine
+          base-image: library/${{ env.BASE_IMAGE }}:latest
+          image: ${{ env.DOCKER_REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ env.BASE_IMAGE }}
         continue-on-error: true
         if: github.event_name == 'schedule'
       - name: Check on result
@@ -47,14 +52,11 @@ jobs:
       - name: Prepare
         id: prepare
         run: |
-          REPOSITORY=${{ secrets.DOCKER_USERNAME }}
-          IMAGE_NAME=leanote
-          VERSION=${{ matrix.version }}
-          TAGS="${REPOSITORY}/${IMAGE_NAME}:${VERSION},${REPOSITORY}/${IMAGE_NAME}:${VERSION}-alpine"
+          TAGS="${{ env.DOCKER_REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ matrix.version }},${{ env.DOCKER_REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ matrix.version }}-${{ env.BASE_IMAGE }}"
           if [[ ${{ matrix.version }} == '2.6.1' ]]; then
-            TAGS+=",${REPOSITORY}/${IMAGE_NAME}:alpine,${REPOSITORY}/${IMAGE_NAME}:latest"
+            TAGS+=",${{ env.DOCKER_REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ env.BASE_IMAGE }},${{ env.DOCKER_REPOSITORY }}/${{ env.IMAGE_NAME }}:latest"
           fi
-          echo "build_args=LEANOTE_VERSION=${VERSION}" >> $GITHUB_OUTPUT
+          echo "build_args=LEANOTE_VERSION=${{ matrix.version }}" >> $GITHUB_OUTPUT
           echo "tags=${TAGS}" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
