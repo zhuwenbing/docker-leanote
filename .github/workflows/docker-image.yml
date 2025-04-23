@@ -86,12 +86,3 @@ jobs:
         if: always()
         run: |
           rm -rf ${HOME}/.docker/config.json
-
-  keepalive:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'schedule'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Keepalive Workflow
-        uses: gautamkrishnar/keepalive-workflow@v2
