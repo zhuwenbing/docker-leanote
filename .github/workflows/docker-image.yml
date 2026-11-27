@@ -3,7 +3,7 @@ name: Leanote Docker Image CI
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 5 * * *"
+    - cron: "5 5 * * *"
 
 env:
   BASE_IMAGE: alpine
